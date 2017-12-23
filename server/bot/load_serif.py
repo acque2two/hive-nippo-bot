@@ -1,0 +1,1 @@
+slack_serif = open("bot/slack_serif.txt").read().split("\n")
