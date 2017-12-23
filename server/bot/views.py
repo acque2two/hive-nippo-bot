@@ -101,16 +101,26 @@ def callback(request):
                 user_saw[e['source']['userId']] = {}
 
             if "name" not in user_saw[e['source']['userId']]:
+                user_saw[e['source']['userId']]["name"] = ""  # 次に入力するものを空の文字列で示す
                 reply_text(reply_token, KIKUYATU_ITIRAN[0])
             elif "today_comment" not in user_saw[e['source']['userId']]:
+                user_saw[e['source']['userId']]["name"] = e['message']['text']  # 実際に文字を入力する
+                user_saw[e['source']['userId']]["today_comment"] = ""  # 次に入力するものを空の文字列で示す
                 reply_text(reply_token, KIKUYATU_ITIRAN[1])
             elif "today_studies" not in user_saw[e['source']['userId']]:
+                user_saw[e['source']['userId']]["today_comment"] = e['message']['text']  # 実際に文字を入力する
+                user_saw[e['source']['userId']]["today_studies"] = ""
                 reply_text(reply_token, KIKUYATU_ITIRAN[2])
             elif "tomorrow_do" not in user_saw[e['source']['userId']]:
+                user_saw[e['source']['userId']]["today_studies"] = e['message']['text']
+                user_saw[e['source']['userId']]["tomorrow_do"] = ""
                 reply_text(reply_token, KIKUYATU_ITIRAN[3])
             elif "quest_for_next" not in user_saw[e['source']['userId']]:
+                user_saw[e['source']['userId']]["tomorrow_do"] = e['message']['text']
+                user_saw[e['source']['userId']]["quest_for_next"] = ""
                 reply_text(reply_token, KIKUYATU_ITIRAN[4])
             else:
+                user_saw[e['source']['userId']]["quest_for_next"] = e['message']['text']
                 slack_send(user_saw[e['source']['userId']])
                 reply_text(reply_token, "投稿しました！お疲れ様でした！")
 
