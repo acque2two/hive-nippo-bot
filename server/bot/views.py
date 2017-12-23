@@ -38,6 +38,16 @@ def reply_text(reply_token, text):
     return text
 
 
+KIKUYATU_ITIRAN = [
+    "名前を入力してください。",
+    "「今日の一言」を入力してください。",
+    "「本日学んだこと」を入力してください。",
+    "「明日行うこと」を入力してください。",
+    "「次回までの課題」を入力してください。"
+]
+
+user_saw = {}
+
 def callback(request):
     reply = ""
     request_json = json.loads(request.body.decode('utf-8'))  # requestの情報をdict形式で取得
@@ -47,5 +57,23 @@ def callback(request):
 
         if message_type == 'text':
             text = e['message']['text']  # 受信メッセージの取得
-            reply += reply_text(reply_token, text)  # LINEにセリフを送信する関数
+            if e['source']['userId'] not in user_saw:
+                user_saw[e['source']['userId']] = {}
+
+            if "name" not in user_saw[e['source']['userId']]:
+                reply_text(reply_token, KIKUYATU_ITIRAN[0])
+            elif "today_comment" not in user_saw[e['source']['userId']]:
+                reply_text(reply_token, KIKUYATU_ITIRAN[1])
+            elif "today_studies" not in user_saw[e['source']['userId']]:
+                reply_text(reply_token, KIKUYATU_ITIRAN[2])
+            elif "tomorrow_do" not in user_saw[e['source']['userId']]:
+                reply_text(reply_token, KIKUYATU_ITIRAN[3])
+            elif "quest_for_next" not in user_saw[e['source']['userId']]:
+                reply_text(reply_token, KIKUYATU_ITIRAN[4])
+            else:
+                # ここに到達できるということは
+                # 全てのデータを入力できているということ
+                pass
+
+
     return HttpResponse(reply)  # テスト用
