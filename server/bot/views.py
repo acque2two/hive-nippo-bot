@@ -29,14 +29,15 @@ def slack_send(mesg_dict):
     url = "https://slack.com/api/chat.postMessage"
 
     def hoge(fuga):
-        text = "【今日やったこと】 \n"
-        text += fuga[1] + "\n"
+        text = "名前: " + fuga["name"] + "\n"
+        text += "【今日やったこと】 \n"
+        text += fuga["today_comment"] + "\n"
         text += "【今日学んだこと】 \n"
-        text += fuga[2] + "\n"
+        text += fuga["today_studies"] + "\n"
         text += "【明日行うこと】 \n"
-        text += fuga[3] + "\n"
+        text += fuga["tomorrow_do"] + "\n"
         text += "【次回までの課題】 \n"
-        text += fuga[4] + "\n"
+        text += fuga["quest_for_next"] + "\n"
         return text
 
     params = {'token':          'xoxp-8534391651-219333654307-280723382546-bcd2278e3dd44dffd57dcbd2ddf16e29',
@@ -110,8 +111,7 @@ def callback(request):
             elif "quest_for_next" not in user_saw[e['source']['userId']]:
                 reply_text(reply_token, KIKUYATU_ITIRAN[4])
             else:
-                # ここに到達できるということは
-                # 全てのデータを入力できているということ
-                pass
+                slack_send(user_saw[e['source']['userId']])
+                reply_text(reply_token, "投稿しました！お疲れ様でした！")
 
     return HttpResponse(reply)  # テスト用
